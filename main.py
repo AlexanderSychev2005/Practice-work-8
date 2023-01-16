@@ -7,8 +7,13 @@ WIDTH = 600
 HEIGHT = 700
 RED = 200, 0, 0
 Darkviolet = 104, 34, 139
-# Paddle = Rect((20, 100), (100, 10))
-# Ball = Rect((5, 200), (100, 5))
+COLOR1 = 71,60,139
+WHITE = (255, 255, 255)
+BOX = Rect((20, 100), (100,10))
+RADIUS = 13
+ball_speed_x = -3
+ball_speed_y = 3
+hearts = [Actor("heart", (20, 20)), Actor("heart", (55, 20)), Actor("heart", (90, 20))]
 
 
 class Vector:
@@ -26,12 +31,41 @@ class Vector:
 
 class Paddle:
     def __init__(self, l, h, s1, s2):
-        self.position = l, h
+        self.position = [l, h]
         self.size = s1, s2
-        self.rect = Rect(self.position, self.size)
+
+    def draw(self):
+        screen.draw.filled_rect(Rect(self.position, self.size), RED)
 
 
 my_paddle = Paddle(200, 600, 100, 20)
+
+class Rectangle:
+    def __init__(self,x, y, w, h):
+        self.x = x
+        self.y = y
+        self.h = h
+        self.w = w
+
+    def draw(self):
+        rect = Rect(self.x, self.y, self.h, self.w)
+        screen.draw.filled_rect(rect, "blue")
+
+
+rectangles = []
+rectan_count = 0
+x = 30
+y = 50
+while rectan_count < 18:
+    rectangles.append(Rectangle(x, y, 20, 50))
+    rectan_count += 1
+    x += 80
+    if rectan_count == 7:
+        y += 30
+        x = 70
+    elif rectan_count == 13:
+        y += 30
+        x = 110
 
 
 class Ball:
@@ -39,7 +73,7 @@ class Ball:
         self.position = Vector(x, y)
 
     def draw(self):
-        screen.draw.filled_circle((self.position.x, self.position.y), 13, "darkviolet")
+        screen.draw.filled_circle((self.position.x, self.position.y), RADIUS, "darkviolet")
 
     def update(self):
         pass
@@ -48,21 +82,49 @@ class Ball:
 ball = Ball(300, 300)
 
 
-
 def draw():
+    global ball_speed_x, ball_speed_y
     screen.clear()
-    screen.draw.rect(my_paddle.rect, RED)
+    my_paddle.draw()
     ball.draw()
+    if hearts:
+        for heart in hearts:
+            heart.draw()
+        for rectangle in rectangles:
+            if (rectangle.x <= ball.position.x <= (rectangle.x + rectangle.w)) and (rectangle.y <= ball.position.y <= (rectangle.y + rectangle.h)):
+                ball_speed_y *= -1
+                rectangles.remove(rectangle)
+            rectangle.draw()
+    else:
+        screen.draw.text("Sorry, you lose!!", (150, 200), color="blue", fontsize=50)
 
 
 def on_mouse_move(pos):
     x = pos[0]
-    my_paddle.rect.centerx = x
+    my_paddle.position[0] = x
+
+
+def update_ball(dt, paddle_x, paddle_y):
+    global ball_speed_x, ball_speed_y
+    ball.position.x -= ball_speed_x
+    ball.position.y -= ball_speed_y
+
+    if (ball.position.x >= WIDTH) or (ball.position.x <= 0):
+        ball_speed_x *= -1
+    if (ball.position.y >= HEIGHT) or (ball.position.y <= 0):
+        ball_speed_y *= -1
+    if ((paddle_x + 100) >= ball.position.x >= paddle_x) and (paddle_y <= ball.position.y):
+        ball_speed_y *= -1
+
+    if ball.position.y >= HEIGHT:
+        ball.position.x = WIDTH // 2
+        ball.position.y = HEIGHT // 2
+        if hearts:
+            hearts.pop()
+            ball_speed_y += 1
 
 
 def update(dt):
-    ball.position.y += 2
-    pass
-
+    update_ball(dt, my_paddle.position[0], my_paddle.position[1])
 
 pgzrun.go()
