@@ -97,6 +97,7 @@ def draw():
             rectangle.draw()
     else:
         screen.draw.text("Sorry, you lose!!", (150, 200), color="blue", fontsize=50)
+        exit()
 
 
 def on_mouse_move(pos):
@@ -122,6 +123,8 @@ def update_ball(dt, paddle_x, paddle_y):
         if hearts:
             hearts.pop()
             ball_speed_y += 1
+
+
 
 
 def update(dt):
