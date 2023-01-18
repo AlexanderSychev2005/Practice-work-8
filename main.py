@@ -129,6 +129,8 @@ def update_ball(dt, paddle_x, paddle_y):
             ball_speed_y += 1
 
 
+
+
 def update(dt):
     update_ball(dt, my_paddle.position[0], my_paddle.position[1])
 
