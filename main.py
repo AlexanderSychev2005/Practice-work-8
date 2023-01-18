@@ -90,13 +90,18 @@ def draw():
     if hearts:
         for heart in hearts:
             heart.draw()
+    else:
+        screen.draw.text("Sorry, you lose!!", (150, 200), color="blue", fontsize=50)
+    if rectangles:
         for rectangle in rectangles:
             if (rectangle.x <= ball.position.x <= (rectangle.x + rectangle.w)) and (rectangle.y <= ball.position.y <= (rectangle.y + rectangle.h)):
                 ball_speed_y *= -1
                 rectangles.remove(rectangle)
             rectangle.draw()
     else:
-        screen.draw.text("Sorry, you lose!!", (150, 200), color="blue", fontsize=50)
+        screen.draw.text("You win!!!", (150, 200), color="blue", fontsize=50)
+
+
 
 
 def on_mouse_move(pos):
