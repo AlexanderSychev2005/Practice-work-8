@@ -102,8 +102,6 @@ def draw():
         screen.draw.text("You win!!!", (150, 200), color="blue", fontsize=50)
 
 
-
-
 def on_mouse_move(pos):
     x = pos[0]
     my_paddle.position[0] = x
