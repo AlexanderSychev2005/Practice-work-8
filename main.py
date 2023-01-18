@@ -1,7 +1,10 @@
+import time
+import sys
 import pgzrun
 import pygame
 
 from pgzero.actor import Actor
+
 
 WIDTH = 600
 HEIGHT = 700
@@ -92,14 +95,22 @@ def draw():
             heart.draw()
     else:
         screen.draw.text("Sorry, you lose!!", (150, 200), color="blue", fontsize=50)
+        time.sleep(5)
+
+
+
     if rectangles:
         for rectangle in rectangles:
             if (rectangle.x <= ball.position.x <= (rectangle.x + rectangle.w)) and (rectangle.y <= ball.position.y <= (rectangle.y + rectangle.h)):
                 ball_speed_y *= -1
                 rectangles.remove(rectangle)
             rectangle.draw()
+
+
     else:
         screen.draw.text("You win!!!", (150, 200), color="blue", fontsize=50)
+        time.sleep(5)
+
 
 
 def on_mouse_move(pos):
