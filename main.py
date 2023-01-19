@@ -17,7 +17,7 @@ RADIUS = 13
 ball_speed_x = -3
 ball_speed_y = 3
 hearts = [Actor("heart", (20, 20)), Actor("heart", (55, 20)), Actor("heart", (90, 20))]
-
+score =0
 
 class Vector:
 
@@ -42,6 +42,7 @@ class Paddle:
 
 
 my_paddle = Paddle(200, 600, 100, 20)
+
 
 class Rectangle:
     def __init__(self,x, y, w, h):
@@ -85,31 +86,36 @@ class Ball:
 ball = Ball(300, 300)
 
 
+
 def draw():
-    global ball_speed_x, ball_speed_y
+
+    global ball_speed_x, ball_speed_y, score
     screen.clear()
     my_paddle.draw()
     ball.draw()
+
     if hearts:
         for heart in hearts:
             heart.draw()
+
     else:
+        screen.clear()
         screen.draw.text("Sorry, you lose!!", (150, 200), color="blue", fontsize=50)
-        time.sleep(5)
-
-
 
     if rectangles:
         for rectangle in rectangles:
             if (rectangle.x <= ball.position.x <= (rectangle.x + rectangle.w)) and (rectangle.y <= ball.position.y <= (rectangle.y + rectangle.h)):
                 ball_speed_y *= -1
                 rectangles.remove(rectangle)
+                score += 1
             rectangle.draw()
 
+        screen.draw.text("Score:" + str(score ), (30, 30), color="blue", fontsize=25)
 
     else:
         screen.draw.text("You win!!!", (150, 200), color="blue", fontsize=50)
-        time.sleep(5)
+        time.sleep(2.5)
+
 
 
 
@@ -140,7 +146,13 @@ def update_ball(dt, paddle_x, paddle_y):
 
 
 
+
 def update(dt):
     update_ball(dt, my_paddle.position[0], my_paddle.position[1])
+
+
+
+
+
 
 pgzrun.go()
